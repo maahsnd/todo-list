@@ -5,19 +5,29 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <form method="post">
-    <input type="text" id="title">
+  <button type="button" class="new-list-button">New List</button>
+  <div class="new-list-form">
+    <form  method="post">
+      <label for="list-title">List Title</label>
+      <input type="text" id="list-title">
+      <button type="button" class="new-list-submit-button">Submit</button>
+    </form>
+  </div>
+  <form class="to-do-item" method="post">
     <label for="title">Title</label>
-    <input type="text" id="dueDate">
+    <input type="text" id="title">
     <label for="dueDate">Due Date</label>
-    <input type="text" id="priority">
+    <input type="text" id="dueDate">
     <label for="priority">Priority</label>
-    <input type="text" id="description">
+    <input type="text" id="priority">
     <label for="description">Description</label>
-    <button type="button">Submit</button>
+    <input type="text" id="description">
+    <button class="to-do-item-submit" type="button">Submit</button>
   </form>
-  <script src="main.js"></script>
+  <div id="content"></div>
+  <script src="index.bundle.js"></script>
 </body>
 </html>
