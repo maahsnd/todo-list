@@ -6,13 +6,11 @@ function getInputs() {
         });
         //call to render to DOM
         renderToDom(inputValues);
-        addToList(inputValues);
+        addToList(currentListIndex, inputValues);
     };
 
 //list object
-const protoList = {
-    toDoItems: []
-};
+const protoList = {};
 //master list or list of lists
 let masterList = [];
 //variable to store location of current list in master list index
@@ -23,10 +21,10 @@ const createNewList = () => {
     const setCurrentListIndex = () => currentListIndex = masterList.length - 1;
     const makeList = () => {masterList.push(
             Object.assign(
-                Object.create(protoList), {title: getListTitle()}
+                Object.create(protoList), {listTitle: getListTitle()}, {toDoItems: []}
             )   
         );
-        setCurrentList();
+        setCurrentListIndex();
         //clear title input field
         document.querySelector('#list-title').value = '';
         };
@@ -48,22 +46,55 @@ const newListSubmit = document.querySelector('.new-list-submit-button');
 newListSubmit.addEventListener("click", () => {createNewList().makeList(
 )});
 
-// add item to list
-function addToList (list, todoItem) {
-    list.push(todoItem);
+//add listener to show all lists button
+const showAllListsBtn = document.querySelector('.show-all-lists');
+showAllListsBtn.addEventListener("click", showAllLists);
+
+// add item to toDoItems array within to do list
+function addToList (listIndex, todoItem) {
+    masterList[listIndex].toDoItems.push(
+        {
+            title: todoItem[0],
+            dueDate: todoItem[1],
+            priority: todoItem[2],
+            description: todoItem[3]
+        }
+    );
 };
 
-//render inputs to DOM
+//show all lists func (renders to DOM)
+function showAllLists() {
+    const contentDiv = document.querySelector('#content');
+    let masterListToRender = [];
+    masterList.forEach(input => {
+        let el = document.createElement('button');
+        el.textContent = input.listTitle;
+        el.addEventListener("click", () => {
+            showList(input)}
+        );
+        masterListToRender.push(el);
+    });
+    masterListToRender.forEach(input => {
+        contentDiv.append(input);
+    });
+};
+
+//show list function
+function showList(list) {
+    list.toDoItems.forEach( item => renderToDom(item));
+}
+
+//render inputs to DOM. Takes individual todo item object as input
 function renderToDom(taskInputs) {
     const contentDiv = document.querySelector('#content');
     const title = document.createElement('div');
-    title.innerHTML = taskInputs[0];
+    title.innerHTML = taskInputs.title;
     const dueDate = document.createElement('div');
-    dueDate.innerHTML = taskInputs[1];
+    dueDate.innerHTML = taskInputs.dueDate;
     const priority = document.createElement('div');
-    priority.innerHTML = taskInputs[2];
+    priority.innerHTML = taskInputs.priority;
     const description = document.createElement('div');
-    description.innerHTML = taskInputs[3];
+    description.innerHTML = taskInputs.description;
     contentDiv.append(title, dueDate, priority, description);
 };
 //add to list
