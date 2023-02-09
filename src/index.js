@@ -12,7 +12,7 @@ function getInputs() {
 function renderItemOnSubmit() {
     let list = masterList[currentListIndex].toDoItems;
     let itemIndex = list.length - 1;
-    renderToDom(list[itemIndex], itemIndex);
+    renderItemToDom(list[itemIndex], itemIndex);
 }
 
 //list object
@@ -93,7 +93,7 @@ function showAllLists() {
 //show list function
 function showList(list) {
     for (let i = 0; i < list.toDoItems.length; i++) {
-        renderToDom(list.toDoItems[i], i);
+        renderItemToDom(list.toDoItems[i], i);
     }
 }
 
@@ -105,9 +105,12 @@ function deleteItem(event) {
 }
 
 //render inputs to DOM. Takes individual todo item object as input
-function renderToDom(taskInputs, itemIndex) {
+function renderItemToDom(taskInputs, itemIndex) {
     console.log(itemIndex);
     const contentDiv = document.querySelector('#content');
+    const checkBox = document.createElement('input');
+    checkBox.type = "checkbox";
+    checkBox.id = `c${itemIndex}`;
     const itemDiv = document.createElement('div');
     const title = document.createElement('div');
     title.innerHTML = taskInputs.title;
@@ -123,8 +126,9 @@ function renderToDom(taskInputs, itemIndex) {
     deleteBtn.classList.add("delete-button");
     deleteBtn.value = itemIndex;
     deleteBtn.addEventListener("click", deleteItem);
-    itemDiv.append(title, dueDate, priority, description, deleteBtn);
+    itemDiv.append(checkBox, title, dueDate, priority, description, deleteBtn);
     itemDiv.id = `d${itemIndex}`;
+    itemDiv.classList.add("todo-item-wrap");
     contentDiv.append(itemDiv);
 };
 //add to list
