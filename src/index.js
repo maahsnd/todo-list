@@ -1,12 +1,11 @@
 function getInputs() {
-    let inputs = document.querySelectorAll('.to-do-item > input');
+    let inputs = document.querySelectorAll('.to-do-item-form > input');
     let inputValues = [];
     inputs.forEach(input => {
         inputValues.push(input.value);
     });
     addToList(currentListIndex, inputValues);
     renderItemOnSubmit();
-    //call function to render last item of list to DOM
 };
 
 function renderItemOnSubmit() {
@@ -15,13 +14,13 @@ function renderItemOnSubmit() {
     renderItemToDom(list[itemIndex], itemIndex);
 }
 
-//list object
+//proto list object
 const protoList = {};
-//master list or list of lists
+//array containing individual lists as objects
 let masterList = [];
 //variable to store location of current list in master list index
 let currentListIndex;
-//create new list
+
 const createNewList = () => {
     const getListTitle = () => (document.querySelector('#list-title')).value || "myFirstList";
     const setCurrentListIndex = () => currentListIndex = masterList.length - 1;
@@ -39,26 +38,24 @@ const createNewList = () => {
 //set default list
 createNewList().makeList();
 
-//add listener to new list btn
-const newList = document.querySelector('.new-list-button');
-newList.addEventListener("click", () => {
-//pull up new-list-form!!
-});
-
-//add listener to submit btn
+//add listeners
+//to submit btn
 const submit = document.querySelector('.to-do-item-submit');
 submit.addEventListener("click", getInputs);
-
-//add listener to new list submit button
+//to new list submit button
 const newListSubmit = document.querySelector('.new-list-submit-button');
 newListSubmit.addEventListener("click", () => {createNewList().makeList(
 )});
-
-//add listener to show all lists button
+//to show all lists button
 const showAllListsBtn = document.querySelector('.show-all-lists');
 showAllListsBtn.addEventListener("click", showAllLists);
+//to new list btn
+const newList = document.querySelector('.new-list-button');
+newList.addEventListener("click", () => {
+//pull up new-list-form!! INCOMPLETE
+});
 
-// add item to toDoItems array within to do list
+// add item to toDoItems array within to do list object
 function addToList (listIndex, todoItem) {
     masterList[listIndex].toDoItems.push(
         {
@@ -66,11 +63,9 @@ function addToList (listIndex, todoItem) {
             dueDate: todoItem[1],
             priority: todoItem[2],
             description: todoItem[3]
-        }
-    );
+        });
 };
 
-//show all lists func (renders to DOM)
 function showAllLists() {
     const contentDiv = document.querySelector('#content');
     let masterListToRender = [];
@@ -90,7 +85,6 @@ function showAllLists() {
     });
 };
 
-//show list function
 function showList(list) {
     for (let i = 0; i < list.toDoItems.length; i++) {
         renderItemToDom(list.toDoItems[i], i);
@@ -104,13 +98,25 @@ function deleteItem(event) {
     item.remove();
 }
 
+function handleCheck(event) {
+    let itemIndex = parseInt(event.target.id.slice(1))
+    const checkedItemDiv = document.querySelector(`#d${itemIndex}`);
+    event.target.checked ? checkedItemDiv.classList.add('checked') :
+        checkedItemDiv.classList.remove('checked');
+}
+
 //render inputs to DOM. Takes individual todo item object as input
 function renderItemToDom(taskInputs, itemIndex) {
-    console.log(itemIndex);
     const contentDiv = document.querySelector('#content');
+    //check box
     const checkBox = document.createElement('input');
     checkBox.type = "checkbox";
     checkBox.id = `c${itemIndex}`;
+    const checkBoxDiv = document.createElement('div');
+    checkBoxDiv.classList.add("checkbox-div");
+    checkBox.addEventListener("click", handleCheck)
+    checkBoxDiv.append(checkBox);
+    //to do item attributes
     const itemDiv = document.createElement('div');
     const title = document.createElement('div');
     title.innerHTML = taskInputs.title;
@@ -118,18 +124,27 @@ function renderItemToDom(taskInputs, itemIndex) {
     dueDate.innerHTML = taskInputs.dueDate;
     const priority = document.createElement('div');
     priority.innerHTML = taskInputs.priority;
-    const description = document.createElement('div');
-    description.innerHTML = taskInputs.description;
+    /* const description = document.createElement('div');
+    description.innerHTML = taskInputs.description; */
+    //expand button
+    const expandBtn = document.createElement('button');
+    expandBtn.innerHTML = "See Details";
+    expandBtn.type = "button";
+    expandBtn.value = itemIndex;
+    expandBtn.classList.add("expand-button")
+    //delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.innerHTML = "Delete Item";
     deleteBtn.type = "button";
     deleteBtn.classList.add("delete-button");
     deleteBtn.value = itemIndex;
     deleteBtn.addEventListener("click", deleteItem);
-    itemDiv.append(checkBox, title, dueDate, priority, description, deleteBtn);
+    const btnDiv = document.createElement('div');
+    btnDiv.classList.add("btn-div");
+    btnDiv.append(expandBtn, deleteBtn)
+    //gather elements to create to do item 
+    itemDiv.append(checkBoxDiv, title, dueDate, priority, btnDiv);
     itemDiv.id = `d${itemIndex}`;
     itemDiv.classList.add("todo-item-wrap");
     contentDiv.append(itemDiv);
 };
-//add to list
-//render last item of list

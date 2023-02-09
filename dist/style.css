@@ -47,14 +47,29 @@ table {
     margin: 8px;
 }
 
+.new-list-form, .todo-item-wrap, .button-dash, .to-do-item-form {
+    margin: 3px;
+}
+
+/*to do item styling*/
 .todo-item-wrap {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     border: 1px darkgray solid;
     border-radius: 2px;
 }
 
-.new-list-form, .todo-item-wrap, .button-dash, .to-do-item {
-    margin: 3px;
+.checked {
+    background-color: blanchedalmond;
+    border-color: saddlebrown;
 }
+
+.checkbox-div {
+    width: 5%;
+}
+
+.delete-button {
+    margin-right: 2px;
+}
+
 
