@@ -54,6 +54,13 @@ const newList = document.querySelector('.new-list-button');
 newList.addEventListener("click", () => {
 //pull up new-list-form!! INCOMPLETE
 });
+const popupX = document.querySelector('.x-out');
+popupX.addEventListener("click", closePopup);
+
+function closePopup() {
+    const popup = document.querySelector('.popup-div');
+    popup.style.display = "none";
+}
 
 // add item to toDoItems array within to do list object
 function addToList (listIndex, todoItem) {
@@ -91,6 +98,13 @@ function showList(list) {
     }
 }
 
+function handleCheck(event) {
+    let itemIndex = parseInt(event.target.id.slice(1))
+    const checkedItemDiv = document.querySelector(`#d${itemIndex}`);
+    event.target.checked ? checkedItemDiv.classList.add('checked') :
+        checkedItemDiv.classList.remove('checked');
+}
+
 function deleteItem(event) {
     let itemIndex = event.target.value;
     masterList[currentListIndex].toDoItems.splice(itemIndex, 1);
@@ -98,11 +112,17 @@ function deleteItem(event) {
     item.remove();
 }
 
-function handleCheck(event) {
-    let itemIndex = parseInt(event.target.id.slice(1))
-    const checkedItemDiv = document.querySelector(`#d${itemIndex}`);
-    event.target.checked ? checkedItemDiv.classList.add('checked') :
-        checkedItemDiv.classList.remove('checked');
+function expandItem(event) {
+    const itemIndex = event.target.value;
+    const popupDiv = document.querySelector('.popup-div');
+    popupDiv.style.display = "flex";
+    renderToPopup(itemIndex);
+}
+
+function renderToPopup(itemIndex) {
+    const title = document.querySelector('.popup-item>#title');
+    const titleText = masterList[currentListIndex].toDoItems[itemIndex].title;
+    title.value = titleText;
 }
 
 //render inputs to DOM. Takes individual todo item object as input
@@ -122,8 +142,8 @@ function renderItemToDom(taskInputs, itemIndex) {
     title.innerHTML = taskInputs.title;
     const dueDate = document.createElement('div');
     dueDate.innerHTML = taskInputs.dueDate;
-    const priority = document.createElement('div');
-    priority.innerHTML = taskInputs.priority;
+    /* const priority = document.createElement('div');
+    priority.innerHTML = taskInputs.priority; */
     /* const description = document.createElement('div');
     description.innerHTML = taskInputs.description; */
     //expand button
@@ -131,6 +151,7 @@ function renderItemToDom(taskInputs, itemIndex) {
     expandBtn.innerHTML = "See Details";
     expandBtn.type = "button";
     expandBtn.value = itemIndex;
+    expandBtn.addEventListener("click", expandItem);
     expandBtn.classList.add("expand-button")
     //delete button
     const deleteBtn = document.createElement('button');
@@ -143,7 +164,7 @@ function renderItemToDom(taskInputs, itemIndex) {
     btnDiv.classList.add("btn-div");
     btnDiv.append(expandBtn, deleteBtn)
     //gather elements to create to do item 
-    itemDiv.append(checkBoxDiv, title, dueDate, priority, btnDiv);
+    itemDiv.append(checkBoxDiv, title, dueDate, btnDiv);
     itemDiv.id = `d${itemIndex}`;
     itemDiv.classList.add("todo-item-wrap");
     contentDiv.append(itemDiv);
