@@ -103,6 +103,7 @@ function addToList (listIndex, todoItem) {
 
 function showAllLists() {
     const contentDiv = document.querySelector('#content');
+    clearContent();
     let masterListToRender = [];
     for (let i = 0; i < masterList.length; i++) {
         let el = document.createElement('button');
@@ -119,6 +120,11 @@ function showAllLists() {
         contentDiv.append(input);
     });
 };
+
+function clearContent() {
+    const contentChildNodeList = document.querySelectorAll('#content>*');
+    contentChildNodeList.forEach(node => node.remove());
+}
 
 function showList(list) {
     for (let i = 0; i < list.toDoItems.length; i++) {
