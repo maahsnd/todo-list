@@ -44,15 +44,17 @@ const submit = document.querySelector('.to-do-item-submit');
 submit.addEventListener("click", getInputs);
 //to new list submit button
 const newListSubmit = document.querySelector('.new-list-submit-button');
-newListSubmit.addEventListener("click", () => {createNewList().makeList(
-)});
+newListSubmit.addEventListener("click", () => {
+    createNewList().makeList();
+    document.querySelector('.new-list-form').style.display = "none";
+});
 //to show all lists button
 const showAllListsBtn = document.querySelector('.show-all-lists');
 showAllListsBtn.addEventListener("click", showAllLists);
 //to new list btn
 const newList = document.querySelector('.new-list-button');
 newList.addEventListener("click", () => {
-//pull up new-list-form!! INCOMPLETE
+    document.querySelector('.new-list-form').style.display = "block";
 });
 //to pop up x out
 const popupX = document.querySelector('.x-out');
