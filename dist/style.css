@@ -89,6 +89,8 @@ table {
     margin-left: 9%;
     margin-right: 9%;
     margin-top: 2%;
+    display: flex;
+    align-items: center;
 }
 
 .x-out {
@@ -99,4 +101,14 @@ table {
 
 .x-out:hover {
     cursor: pointer;
+}
+
+textarea {
+    resize: none;
+    margin-left: auto;
+    width: 65%;
+}
+
+.popup-item>label {
+    margin-right: 5%;
 }

@@ -54,12 +54,32 @@ const newList = document.querySelector('.new-list-button');
 newList.addEventListener("click", () => {
 //pull up new-list-form!! INCOMPLETE
 });
+//to pop up x out
 const popupX = document.querySelector('.x-out');
 popupX.addEventListener("click", closePopup);
+//to save changes made to pop up
+const saveChangesBtn = document.querySelector('.save-changes-button');
+saveChangesBtn.addEventListener("click", saveChanges);
+
 
 function closePopup() {
     const popup = document.querySelector('.popup-div');
     popup.style.display = "none";
+}
+
+function saveChanges(event) {
+    const itemIndex = event.target.value;
+    const todoItemProperties = document.querySelectorAll('textarea');
+    let inputValues = [];
+    todoItemProperties.forEach(prop => {
+        inputValues.push(prop.value);
+    });
+    const todoItem = masterList[currentListIndex].toDoItems[itemIndex];
+    todoItem.title = inputValues[0];
+    todoItem.dueDate = inputValues[1];
+    todoItem.priority = inputValues[2];
+    todoItem.description = inputValues[3];
+    closePopup();
 }
 
 // add item to toDoItems array within to do list object
@@ -123,6 +143,17 @@ function renderToPopup(itemIndex) {
     const title = document.querySelector('.popup-item>#title');
     const titleText = masterList[currentListIndex].toDoItems[itemIndex].title;
     title.value = titleText;
+    const dueDate = document.querySelector('.popup-item>#duedate');
+    const dueDateText = masterList[currentListIndex].toDoItems[itemIndex].dueDate;
+    dueDate.value = dueDateText;
+    const priority = document.querySelector('.popup-item>#priority');
+    const priorityText = masterList[currentListIndex].toDoItems[itemIndex].priority;
+    priority.value = priorityText;
+    const description = document.querySelector('.popup-item>#description');
+    const descriptionText = masterList[currentListIndex].toDoItems[itemIndex].description;
+    description.value = descriptionText;
+    const saveButton = document.querySelector('.save-changes-button');
+    saveButton.value = itemIndex;
 }
 
 //render inputs to DOM. Takes individual todo item object as input

@@ -37,11 +37,23 @@
       <div class="x-out">X</div>
       <div class="popup-item title">
         <label for="title">Title</label>
-        <textarea name="title" id="title" cols="10" rows="1"></textarea>
+        <textarea name="title" id="title" cols="40" rows="1"></textarea>
       </div>
-      <div class="popup-item duedate"></div>
-      <div class="popup-item priority"></div>
-      <div class="popup-item description"></div>
+      <div class="popup-item duedate">
+        <label for="duedate">Due Date</label>
+        <textarea name="duedate" id="duedate" cols="40" rows="1"></textarea>
+      </div>
+      <div class="popup-item priority">
+        <label for="priority">Priority</label>
+        <textarea name="priority" id="priority" cols="40" rows="1"></textarea>
+      </div>
+      <div class="popup-item description">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" cols="40" rows="20"></textarea>
+      </div>
+      <div class="save-changes-wrap">
+        <button type="button" class="save-changes-button">Save Changes</button>
+      </div>
     </div>
     <div id="content"></div>
   </div>
