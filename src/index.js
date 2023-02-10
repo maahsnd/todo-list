@@ -3,6 +3,7 @@ function getInputs() {
     let inputValues = [];
     inputs.forEach(input => {
         inputValues.push(input.value);
+        input.value = '';
     });
     console.log(createNewList().listIndex.currentListIndex)
     addToList(createNewList().listIndex.currentListIndex, inputValues);
