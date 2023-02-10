@@ -79,7 +79,15 @@ function saveChanges(event) {
     todoItem.dueDate = inputValues[1];
     todoItem.priority = inputValues[2];
     todoItem.description = inputValues[3];
+    renderEdit(itemIndex, todoItem.title, todoItem.dueDate)
     closePopup();
+}
+
+function renderEdit(itemIndex, editedTitle, editedDate) {
+    const titleToEdit = document.querySelector(`#d${itemIndex} div:nth-child(2)`);
+    const dateToEdit = document.querySelector(`#d${itemIndex} div:nth-child(3)`);
+    titleToEdit.innerHTML = editedTitle;
+    dateToEdit.innerHTML = editedDate;
 }
 
 // add item to toDoItems array within to do list object
