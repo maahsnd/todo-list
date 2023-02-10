@@ -1,15 +1,16 @@
 function getInputs() {
-    let inputs = document.querySelectorAll('.to-do-item-form > input');
+    let inputs = document.querySelectorAll('fieldset > input');
     let inputValues = [];
     inputs.forEach(input => {
         inputValues.push(input.value);
     });
-    addToList(currentListIndex, inputValues);
+    console.log(createNewList().listIndex.currentListIndex)
+    addToList(createNewList().listIndex.currentListIndex, inputValues);
     renderItemOnSubmit();
 };
 
 function renderItemOnSubmit() {
-    let list = masterList[currentListIndex].toDoItems;
+    let list = masterList[createNewList().listIndex.currentListIndex].toDoItems;
     let itemIndex = list.length - 1;
     renderItemToDom(list[itemIndex], itemIndex);
 }
@@ -18,22 +19,28 @@ function renderItemOnSubmit() {
 const protoList = {};
 //array containing individual lists as objects
 let masterList = [];
-//variable to store location of current list in master list index
-let currentListIndex;
 
 const createNewList = () => {
     const getListTitle = () => (document.querySelector('#list-title')).value || "myFirstList";
-    const setCurrentListIndex = () => currentListIndex = masterList.length - 1;
+    //variable to store location of current list in master list index
+    let listIndex = {
+        index: (masterList.length - 1),
+        get currentListIndex() {
+            return this.index;
+        },
+        set currentListIndex(value) {
+            this.index = value;
+        }
+    }
     const makeList = () => {masterList.push(
             Object.assign(
                 Object.create(protoList), {listTitle: getListTitle()}, {toDoItems: []}
             )   
         );
-        setCurrentListIndex();
         //clear title input field
         document.querySelector('#list-title').value = '';
         };
-    return { makeList };
+    return { makeList, listIndex };
 };
 //set default list
 createNewList().makeList();
@@ -46,6 +53,7 @@ submit.addEventListener("click", getInputs);
 const newListSubmit = document.querySelector('.new-list-submit-button');
 newListSubmit.addEventListener("click", () => {
     createNewList().makeList();
+    setTitleHeader();
     document.querySelector('.new-list-form').style.display = "none";
 });
 //to show all lists button
@@ -76,7 +84,7 @@ function saveChanges(event) {
     todoItemProperties.forEach(prop => {
         inputValues.push(prop.value);
     });
-    const todoItem = masterList[currentListIndex].toDoItems[itemIndex];
+    const todoItem = masterList[createNewList().listIndex.currentListIndex].toDoItems[itemIndex];
     todoItem.title = inputValues[0];
     todoItem.dueDate = inputValues[1];
     todoItem.priority = inputValues[2];
@@ -103,6 +111,10 @@ function addToList (listIndex, todoItem) {
         });
 };
 
+function setTitleHeader() {
+    document.querySelector('#list-title-header').innerHTML = masterList[createNewList().listIndex.currentListIndex].listTitle;
+};
+
 function showAllLists() {
     const contentDiv = document.querySelector('#content');
     clearContent();
@@ -112,8 +124,10 @@ function showAllLists() {
         el.textContent = masterList[i].listTitle;
         el.value = i;
         el.addEventListener("click", () => {
+            clearContent();
+            setTitleHeader();
             showList(masterList[i])
-            currentListIndex = i;
+            createNewList().listIndex.currentListIndex = i;
             }
         );
         masterListToRender.push(el);
@@ -143,7 +157,7 @@ function handleCheck(event) {
 
 function deleteItem(event) {
     let itemIndex = event.target.value;
-    masterList[currentListIndex].toDoItems.splice(itemIndex, 1);
+    masterList[createNewList().listIndex.currentListIndex].toDoItems.splice(itemIndex, 1);
     const item = document.querySelector(`#d${itemIndex}`);
     item.remove();
 }
@@ -157,16 +171,16 @@ function expandItem(event) {
 
 function renderToPopup(itemIndex) {
     const title = document.querySelector('.popup-item>#title');
-    const titleText = masterList[currentListIndex].toDoItems[itemIndex].title;
+    const titleText = masterList[createNewList().listIndex.currentListIndex].toDoItems[itemIndex].title;
     title.value = titleText;
     const dueDate = document.querySelector('.popup-item>#duedate');
-    const dueDateText = masterList[currentListIndex].toDoItems[itemIndex].dueDate;
+    const dueDateText = masterList[createNewList().listIndex.currentListIndex].toDoItems[itemIndex].dueDate;
     dueDate.value = dueDateText;
     const priority = document.querySelector('.popup-item>#priority');
-    const priorityText = masterList[currentListIndex].toDoItems[itemIndex].priority;
+    const priorityText = masterList[createNewList().listIndex.currentListIndex].toDoItems[itemIndex].priority;
     priority.value = priorityText;
     const description = document.querySelector('.popup-item>#description');
-    const descriptionText = masterList[currentListIndex].toDoItems[itemIndex].description;
+    const descriptionText = masterList[createNewList().listIndex.currentListIndex].toDoItems[itemIndex].description;
     description.value = descriptionText;
     const saveButton = document.querySelector('.save-changes-button');
     saveButton.value = itemIndex;
@@ -189,10 +203,6 @@ function renderItemToDom(taskInputs, itemIndex) {
     title.innerHTML = taskInputs.title;
     const dueDate = document.createElement('div');
     dueDate.innerHTML = taskInputs.dueDate;
-    /* const priority = document.createElement('div');
-    priority.innerHTML = taskInputs.priority; */
-    /* const description = document.createElement('div');
-    description.innerHTML = taskInputs.description; */
     //expand button
     const expandBtn = document.createElement('button');
     expandBtn.innerHTML = "See Details";
