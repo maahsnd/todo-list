@@ -45,10 +45,63 @@ table {
 
 .master-wrap {
     margin: 8px;
+    display: flex;
+    flex-direction: column;
 }
 
-.new-list-form, .todo-item-wrap, .button-dash, .to-do-item-form {
+.new-list-form, .todo-item-wrap, .button-dash, .to-do-item-form, .current-list-title-wrap {
     margin: 3px;
+}
+
+.button-dash {
+    display: flex;
+    background-color:cadetblue;
+    border: pink solid 3px;
+    border-radius: 2%;
+    padding: 1%;
+}
+
+.current-list-title-wrap {
+    display: flex;
+    background-color:cadetblue;
+    border: pink solid 3px;
+    border-radius: 2%;
+    padding: 1%;
+    align-items: flex-end;
+}
+
+#item-title-header {
+    margin-left: 4%;
+    margin-right: auto;
+    font-weight: bold;
+}
+
+#duedate-header {
+    margin-left: auto;
+    margin-right: 14.5%;
+    font-weight: bold;
+}
+
+#list-title-header{
+    font-size: x-large;
+    font-weight: bolder;
+}
+
+.new-list-form {
+    display: none;
+}
+
+legend {
+    background-color:pink;
+    padding: 3px;
+    margin-bottom: 3px;
+}
+
+.to-do-item-form {
+    background-color: cadetblue;
+    border:pink solid 3px;
+    border-radius: 2%;
+    padding: 1%; 
 }
 
 /*to do item styling*/
@@ -57,6 +110,15 @@ table {
     justify-content: space-between;
     border: 1px darkgray solid;
     border-radius: 2px;
+}
+
+.todo-item-wrap>div:nth-child(2) {
+    margin-right: auto;
+}
+
+.todo-item-wrap>div:nth-child(3) {
+    margin-left: auto;
+    margin-right: 3%;
 }
 
 .checked {
