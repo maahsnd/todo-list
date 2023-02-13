@@ -1,3 +1,6 @@
+// calls add to list, createnew list, renderitemonsubmit
+// called by to do item submit event listener
+
 function getInputs() {
     let inputs = document.querySelectorAll('fieldset > input');
     let inputValues = [];
@@ -9,16 +12,23 @@ function getInputs() {
     renderItemOnSubmit();
 };
 
+//called by get inputs
+//calls renderitemtodom
+
 function renderItemOnSubmit() {
     let list = masterList[createNewList().listIndex.currentListIndex].toDoItems;
     let itemIndex = list.length - 1;
     renderItemToDom(list[itemIndex], itemIndex);
 }
+//globals
 
 //proto list object
 const protoList = {};
 //array containing individual lists as objects
 let masterList = [];
+
+
+//used by most functions
 
 const createNewList = () => {
     const getListTitle = () => (document.querySelector('#list-title')).value || "myFirstList";
@@ -43,6 +53,8 @@ const createNewList = () => {
     return { makeList, listIndex };
 };
 
+
+//these call getinputs, handle new list, showall lists, closepopup, save changes
 //add listeners
 //to submit btn
 const submit = document.querySelector('.to-do-item-submit');
@@ -65,20 +77,15 @@ popupX.addEventListener("click", closePopup);
 const saveChangesBtn = document.querySelector('.save-changes-button');
 saveChangesBtn.addEventListener("click", saveChanges);
 
-function handleNewList() {
-    createNewList().makeList();
-    createNewList().listIndex.currentListIndex = masterList.length - 1;
-    document.querySelector('#list-title-header').innerHTML = masterList[createNewList().listIndex.currentListIndex].listTitle;
-    clearContent();
-    saveToLocal(createNewList().listIndex.currentListIndex ,masterList[createNewList().listIndex.currentListIndex]);
-    document.querySelector('.new-list-form').style.display = "none";
-};
-
+//calls nothing
+//called by event listener
 function closePopup() {
     const popup = document.querySelector('.popup-div');
     popup.style.display = "none";
 }
 
+// calls create new list, save to local, renderedit, closepopup
+//called by event listener
 function saveChanges(event) {
     const itemIndex = event.target.value;
     const todoItemProperties = document.querySelectorAll('textarea');
@@ -96,7 +103,8 @@ function saveChanges(event) {
     saveToLocal(currentListIndex, masterList[currentListIndex]);
     closePopup();
 }
-
+//calls nothing
+//called by save changes; group in factory with save changes
 function renderEdit(itemIndex, editedTitle, editedDate) {
     const titleToEdit = document.querySelector(`#d${itemIndex} div:nth-child(2)`);
     const dateToEdit = document.querySelector(`#d${itemIndex} div:nth-child(3)`);
@@ -104,7 +112,19 @@ function renderEdit(itemIndex, editedTitle, editedDate) {
     dateToEdit.innerHTML = editedDate;
 }
 
+//calls create new list, clear content
+//called by load from local, event handler
+function handleNewList() {
+    createNewList().makeList();
+    createNewList().listIndex.currentListIndex = masterList.length - 1;
+    document.querySelector('#list-title-header').innerHTML = masterList[createNewList().listIndex.currentListIndex].listTitle;
+    clearContent();
+    saveToLocal(createNewList().listIndex.currentListIndex ,masterList[createNewList().listIndex.currentListIndex]);
+    document.querySelector('.new-list-form').style.display = "none";
+};
+
 // add item to toDoItems array within to do list object
+//called by getinputs, reliant on access to global masterlist
 function addToList (listIndex, todoItem) {
     masterList[listIndex].toDoItems.push(
         {
@@ -116,6 +136,8 @@ function addToList (listIndex, todoItem) {
     saveToLocal(listIndex, masterList[listIndex])
 };
 
+//calls clearcontent, show list, createnewlist
+//called by event handler
 function showAllLists() {
     const contentDiv = document.querySelector('#content');
     clearContent();
@@ -138,17 +160,22 @@ function showAllLists() {
     });
 };
 
+//called by createnew list, handlenew list, showall
 function clearContent() {
     const contentChildNodeList = document.querySelectorAll('#content>*');
     contentChildNodeList.forEach(node => node.remove());
 }
 
+
+//called by show alllists
+//calls renderitemtodom
 function showList(list) {
     for (let i = 0; i < list.toDoItems.length; i++) {
         renderItemToDom(list.toDoItems[i], i);
     }
 }
 
+//called by renderitemtodom
 function handleCheck(event) {
     let itemIndex = parseInt(event.target.id.slice(1))
     const checkedItemDiv = document.querySelector(`#d${itemIndex}`);
@@ -156,6 +183,7 @@ function handleCheck(event) {
         checkedItemDiv.classList.remove('checked');
 }
 
+//called by expand item, delete item
 //given expand/ delete button click event, returns to do item index
 function findItem(event) {
     const childrenOfItemDiv = event.target.parentNode.parentNode.children;
@@ -168,25 +196,26 @@ function findItem(event) {
         }
     }
 }
-
+//calls find item, createnewlist, savetolocal
+//called by render item to dom
 function deleteItem(event) {
     const currentListIndex = createNewList().listIndex.currentListIndex;
     masterList[currentListIndex].toDoItems.splice(findItem(event), 1);
     const item = document.querySelector(`#d${event.target.value}`);
     item.remove();
-    saveToLocal (currentListIndex, masterList[currentListIndex]);
+    saveToLocal(currentListIndex, masterList[currentListIndex]);
 }
 
+//calls rendertopopup
+//called by renderitemtodom
 function expandItem(event) {
     const popupDiv = document.querySelector('.popup-div');
     popupDiv.style.display = "flex";
     renderToPopup(findItem(event));
 }
 
-function isTitle (element, title) {
-    return (element.title === title)
-}
-
+//calls create new list
+//called by expanditem
 function renderToPopup(itemIndex) {
     const title = document.querySelector('.popup-item>#title');
     const titleText = masterList[createNewList().listIndex.currentListIndex].toDoItems[itemIndex].title;
@@ -204,6 +233,8 @@ function renderToPopup(itemIndex) {
     saveButton.value = itemIndex;
 }
 
+//calls expanditem, delete item
+// called by renderitemonsubmit, showlist
 //render inputs to DOM. Takes individual todo item object as input
 function renderItemToDom(taskInputs, itemIndex) {
     const contentDiv = document.querySelector('#content');
@@ -245,6 +276,7 @@ function renderItemToDom(taskInputs, itemIndex) {
     contentDiv.append(itemDiv);
 };
 
+//called by savechanges, delete item, handlenewlist, addtolost
 function saveToLocal (listIndex, currentList) {
     //pass in current list
     const list = JSON.stringify(currentList);
