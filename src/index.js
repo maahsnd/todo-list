@@ -5,7 +5,6 @@ function getInputs() {
         inputValues.push(input.value);
         input.value = '';
     });
-    console.log(createNewList().listIndex.currentListIndex)
     addToList(createNewList().listIndex.currentListIndex, inputValues);
     renderItemOnSubmit();
 };
@@ -25,7 +24,7 @@ const createNewList = () => {
     const getListTitle = () => (document.querySelector('#list-title')).value || "myFirstList";
     //variable to store location of current list in master list index
     let listIndex = {
-        index: (masterList.length - 1),
+        index: 0,
         get currentListIndex() {
             return this.index;
         },
@@ -43,8 +42,6 @@ const createNewList = () => {
         };
     return { makeList, listIndex };
 };
-//set default list
-createNewList().makeList();
 
 //add listeners
 //to submit btn
@@ -52,11 +49,7 @@ const submit = document.querySelector('.to-do-item-submit');
 submit.addEventListener("click", getInputs);
 //to new list submit button
 const newListSubmit = document.querySelector('.new-list-submit-button');
-newListSubmit.addEventListener("click", () => {
-    createNewList().makeList();
-    setTitleHeader();
-    document.querySelector('.new-list-form').style.display = "none";
-});
+newListSubmit.addEventListener("click", handleNewList);
 //to show all lists button
 const showAllListsBtn = document.querySelector('.show-all-lists');
 showAllListsBtn.addEventListener("click", showAllLists);
@@ -72,6 +65,14 @@ popupX.addEventListener("click", closePopup);
 const saveChangesBtn = document.querySelector('.save-changes-button');
 saveChangesBtn.addEventListener("click", saveChanges);
 
+function handleNewList() {
+    createNewList().makeList();
+    createNewList().listIndex.currentListIndex = masterList.length - 1;
+    document.querySelector('#list-title-header').innerHTML = masterList[createNewList().listIndex.currentListIndex].listTitle;
+    clearContent();
+    saveToLocal(createNewList().listIndex.currentListIndex ,masterList[createNewList().listIndex.currentListIndex]);
+    document.querySelector('.new-list-form').style.display = "none";
+};
 
 function closePopup() {
     const popup = document.querySelector('.popup-div');
@@ -91,6 +92,8 @@ function saveChanges(event) {
     todoItem.priority = inputValues[2];
     todoItem.description = inputValues[3];
     renderEdit(itemIndex, todoItem.title, todoItem.dueDate)
+    const currentListIndex = createNewList().listIndex.currentListIndex;
+    saveToLocal(currentListIndex, masterList[currentListIndex]);
     closePopup();
 }
 
@@ -110,10 +113,7 @@ function addToList (listIndex, todoItem) {
             priority: todoItem[2],
             description: todoItem[3]
         });
-};
-
-function setTitleHeader() {
-    document.querySelector('#list-title-header').innerHTML = masterList[createNewList().listIndex.currentListIndex].listTitle;
+    saveToLocal(listIndex, masterList[listIndex])
 };
 
 function showAllLists() {
@@ -124,9 +124,9 @@ function showAllLists() {
         let el = document.createElement('button');
         el.textContent = masterList[i].listTitle;
         el.value = i;
-        el.addEventListener("click", () => {
+        el.addEventListener("click", (event) => {
             clearContent();
-            setTitleHeader();
+            document.querySelector('#list-title-header').innerHTML = masterList[event.target.value].listTitle;
             showList(masterList[i])
             createNewList().listIndex.currentListIndex = i;
             }
@@ -156,18 +156,35 @@ function handleCheck(event) {
         checkedItemDiv.classList.remove('checked');
 }
 
+//given expand/ delete button click event, returns to do item index
+function findItem(event) {
+    const childrenOfItemDiv = event.target.parentNode.parentNode.children;
+    const titleToSeachFor = childrenOfItemDiv.item(1).innerHTML;
+    console.log(titleToSeachFor);
+    const toDoItemsToSearch = masterList[createNewList().listIndex.currentListIndex].toDoItems;
+    for (let i = 0; i < toDoItemsToSearch.length; i++) {
+        if (toDoItemsToSearch[i].title === titleToSeachFor){
+            return i;
+        }
+    }
+}
+
 function deleteItem(event) {
-    let itemIndex = event.target.value;
-    masterList[createNewList().listIndex.currentListIndex].toDoItems.splice(itemIndex, 1);
-    const item = document.querySelector(`#d${itemIndex}`);
+    const currentListIndex = createNewList().listIndex.currentListIndex;
+    masterList[currentListIndex].toDoItems.splice(findItem(event), 1);
+    const item = document.querySelector(`#d${event.target.value}`);
     item.remove();
+    saveToLocal (currentListIndex, masterList[currentListIndex]);
 }
 
 function expandItem(event) {
-    const itemIndex = event.target.value;
     const popupDiv = document.querySelector('.popup-div');
     popupDiv.style.display = "flex";
-    renderToPopup(itemIndex);
+    renderToPopup(findItem(event));
+}
+
+function isTitle (element, title) {
+    return (element.title === title)
 }
 
 function renderToPopup(itemIndex) {
@@ -227,3 +244,19 @@ function renderItemToDom(taskInputs, itemIndex) {
     itemDiv.classList.add("todo-item-wrap");
     contentDiv.append(itemDiv);
 };
+
+function saveToLocal (listIndex, currentList) {
+    //pass in current list
+    const list = JSON.stringify(currentList);
+    localStorage.setItem(`${listIndex}`, list);
+}
+
+const loadFromLocal = (() => {
+    if (localStorage.length === 0) {
+        //set default list
+        return handleNewList();
+    }
+    for (let i = 0; i < localStorage.length; i++) {
+        masterList.push(JSON.parse(localStorage.getItem(i)));
+    }
+})();
