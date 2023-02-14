@@ -1,0 +1,178 @@
+/*meyer reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.master-wrap {
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.new-list-form, .todo-item-wrap, .button-dash, .to-do-item-form, .current-list-title-wrap {
+    margin: 3px;
+}
+
+.button-dash {
+    display: flex;
+    background-color:cadetblue;
+    border: pink solid 3px;
+    border-radius: 2%;
+    padding: 1%;
+}
+
+.current-list-title-wrap {
+    display: flex;
+    background-color:cadetblue;
+    border: pink solid 3px;
+    border-radius: 2%;
+    padding: 1%;
+    align-items: flex-end;
+}
+
+#item-title-header {
+    margin-left: 4%;
+    margin-right: auto;
+    font-weight: bold;
+}
+
+#duedate-header {
+    margin-left: auto;
+    margin-right: 14.5%;
+    font-weight: bold;
+}
+
+#list-title-header{
+    font-size: x-large;
+    font-weight: bolder;
+}
+
+.new-list-form {
+    display: none;
+}
+
+legend {
+    background-color:pink;
+    padding: 3px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.to-do-item-form {
+    background-color: cadetblue;
+    border:pink solid 3px;
+    border-radius: 2%;
+    padding: 1%; 
+}
+
+/*to do item styling*/
+.todo-item-wrap {
+    display: flex;
+    justify-content: space-between;
+    border: 1px darkgray solid;
+    border-radius: 2px;
+}
+
+.todo-item-wrap>div:nth-child(2) {
+    margin-right: auto;
+}
+
+.todo-item-wrap>div:nth-child(3) {
+    margin-left: auto;
+    margin-right: 3%;
+}
+
+.checked {
+    background-color: blanchedalmond;
+    border-color: saddlebrown;
+}
+
+.checkbox-div {
+    width: 5%;
+}
+
+.delete-button {
+    margin-right: 2px;
+}
+
+.popup-div {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    z-index: 1;
+    background-color: aquamarine;
+    height: 50%;
+    width: 40%;
+}
+
+.popup-item {
+    width: 80%;
+    margin-left: 9%;
+    margin-right: 9%;
+    margin-top: 2%;
+    display: flex;
+    align-items: center;
+}
+
+.x-out {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}
+
+.x-out:hover {
+    cursor: pointer;
+}
+
+textarea {
+    resize: none;
+    margin-left: auto;
+    width: 65%;
+}
+
+.popup-item>label {
+    margin-right: 5%;
+}
